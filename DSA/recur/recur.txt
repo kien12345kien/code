@@ -1,0 +1,3 @@
+Every recursive function has 2 cases that could apply, given any input:
+	The base case, which when triggered will terminate the recursive process.
+	The recursive case, which is where the recursion will actually occur.

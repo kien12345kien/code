@@ -1,0 +1,3 @@
+Theo dõi số lượng vé đã bán, doanh thu, thông tin khách hàng
+An ninh dữ liệu, quản lý quyền truy cập
+Giữa các kênh bán vé, cập nhật số lượng vé đã bán theo thời gian vẫn còn diễn ra sự kiện
