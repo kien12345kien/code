@@ -1,0 +1,13 @@
+- chr() function can be used to convert an ASCII ordinal number to a character
+- ord() function does the opposite
+
+- bytes.fromhex() function can be used to convert hex to bytes
+- .hex() instance method can be called on byte strings to get the hex representation.
+- b64encode() encode the string into the binary form.
+
+PYCRYPTODOME
+- bytes_to_long(): Convert a byte string to a long integer.
+- long_to_bytes(): Convert a long integer to a byte string.
+
+
+- zip(): function is used to combine two or more lists (or any other iterables) into a single iterable, where elements from corresponding positions are paired together
