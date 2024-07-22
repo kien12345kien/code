@@ -10,26 +10,21 @@
 #include <iostream>
 using namespace std;
 
-void factori(int num, int factor){
-    if (num <= 1)
-    {
-        return;
-    }
-    
-    if (num % factor == 0)
-    {
+void factory(int num, int factor){
+    if(num < 2 )    return;
+
+    if(num % factor == 0){
         cout << factor << endl;
-        factori(num / factor, factor);
+        factory(num/factor, factor);
     }
+
     else{
         factor ++;
-        factori(num, factor);
+        factory(num, factor);
     }
-    
-    
 }
 
 int main(){
-    int x = 278342368;
-    factori(x, 2);
+    int num = 200000000;
+    factory(num, 2);
 }

@@ -33,5 +33,25 @@ TreeNode* insert(TreeNode* tree, int x){
         return tree;
     }
 
-    if (x == tree->val);
+    else{
+        (x < tree->val) ? tree->tLeft = insert(tree->tLeft, x) : tree->tRight = insert(tree->tRight, x);
+    }
+    return tree;
+}
+
+int main(){
+    TreeNode* root = nullptr;
+
+    root = insert(root, 10);
+    root = insert(root, 5);
+    root = insert(root, 20);
+    root = insert(root, 3);
+    root = insert(root, 7);
+    root = insert(root, 15);
+    root = insert(root, 30);
+
+    cout << "NLR traversak if the tree: ";
+    NLR(root);
+
+    return 0;
 }

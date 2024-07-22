@@ -27,7 +27,7 @@ void init(List* l)  // Create an empty list
     l->head = nullptr;  // list trỏ tới l->head = nullptr
 }
 
-node *initNode(int val) // Tạo node. mới với giá trị  VD: Node* node1 = initNode(10);
+Node *initNode(int val) // Tạo node. mới với giá trị  VD: Node* node1 = initNode(10);
 {
     Node *node = new Node;
     node->data = val;
