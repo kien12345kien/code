@@ -49,16 +49,16 @@ void insertFirst(List* l, Node *newNode)
         l->head = newNode;  // Để con trỏ head trỏ tới newNode
         l->tail = newNode;  // Để con trỏ tail trỏ tới newNode
     }
-    else
-    {
-        newNode->next = l->head; // Liên kết newNode với head hiện tại
-        l->head->prev = newNode; // Liên kết head hiện tại với newNode
-        l->head = newNode;       // Cập nhật head mới
-        l->size ++;              // Tăng kích thước danh sách
-    }
+    // else
+    // {
+    //     newNode->next = l->head; // Liên kết newNode với head hiện tại
+    //     l->head->prev = newNode; // Liên kết head hiện tại với newNode
+    //     l->head = newNode;       // Cập nhật head mới
+    //     l->size ++;              // Tăng kích thước danh sách
+    // }
 }
 
-void insertAfter(Node *newNode, Node *ptr, List* l)
+void insert(Node *newNode, Node *ptr, List* l)
 //  newNode: a pointer to new node that want to insert
 //  ptr: a pointer to a node which you want to insert newNode after it
 //  l: a pointer to the linked list
@@ -127,9 +127,9 @@ int main()
 
     // Insert nodes into the list
     insertFirst(&myList, node1);
-    insertAfter(node2, node1, &myList);
-    insertAfter(node3, node2, &myList);
-    insertAfter(node4, node3, &myList);
+    insert(node2, node1, &myList);
+    insert(node3, node2, &myList);
+    insert(node4, node3, &myList);
 
     // Print the list (for demonstration purposes)
     Node* current = myList.head;

@@ -46,6 +46,7 @@ void insertFirst(List* l, Node *newNode)
     {
         l->size ++; // Increment the list size
         l->head = newNode;  // Để con trỏ head trỏ tới newNode
+        newNode->next = newNode;
     }
 }
 
@@ -56,11 +57,17 @@ void insert(Node *newNode, Node *ptr, List* l)
 {
     // newNode->next = ptr->next;   // Đéo cần
     ptr->next = newNode;    //ptr’s next pointer is updated to point to the newNode (i.e., ptr->next = newNode)
+    newNode->next = l->head;
     l->size++;
 }
 
 void remove(List* l, int val)   // Remove an item from a list
 {
+    if(isEmpty(l)) {
+        cout << "List is empty, nothing to remove." << endl;
+        return;
+    }
+
     Node*  p = l->head;
     if(p->data == val)
     {
@@ -89,6 +96,11 @@ void remove(List* l, int val)   // Remove an item from a list
 
 void printList(List* l) // Function to print the list
 {
+    if(isEmpty(l)) {
+        cout << "List is empty" << endl;
+        return;
+    }
+
     Node* p = l->head;
     while(p != nullptr)
     {
