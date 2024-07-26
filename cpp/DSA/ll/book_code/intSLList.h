@@ -2,34 +2,34 @@
 #define INT_LINKED_LIST
 
 class IntSLLNode{
-    public:
-        IntSLLNode(){
-            next = 0;
-        }
-        IntSLLNode(int el, IntSLLNode* ptr = 0){
-            info = el; next = ptr;
-        }
-        int info;
-        IntSLLNode* next;
+public:
+    IntSLLNode(){
+        next = 0;
+    }
+    IntSLLNode(int el, IntSLLNode* ptr = 0){
+        info = el; next = ptr;
+    }
+    int info;
+    IntSLLNode* next;
 };
 
-class IntSLList
+class intSLList
 {
     private:
         IntSLLNode* head, *tail;
     public:
-        IntSLList(){
+        intSLList(){
             head = tail = 0;
         }
-        ~IntSLList();
+        ~intSLList();
 
         int isEmpty(){
             return head == 0;
         }
         void addToHead(int);
         void addToTail(int);
-        int deleteFromHead();   // delete the head and return its info
-        int deleteFromTail();   // delete the tail and return its info
+        int deleteFromHead();
+        int deleteFromTail();
         void deleteNode(int);
         bool isInList(int) const;
 };

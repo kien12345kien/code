@@ -34,7 +34,8 @@ TreeNode* insert(TreeNode* tree, int x){
     }
 
     else{
-        (x < tree->val) ? tree->tLeft = insert(tree->tLeft, x) : tree->tRight = insert(tree->tRight, x);
+        (x < tree->val) ? 
+        tree->tLeft = insert(tree->tLeft, x) : tree->tRight = insert(tree->tRight, x);
     }
     return tree;
 }
