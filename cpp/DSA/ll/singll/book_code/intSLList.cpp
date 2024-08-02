@@ -4,7 +4,7 @@
 using namespace std;
 
 
-IntSLList:: ~IntSLList(){
+IntSLList :: ~IntSLList(){
     for(IntSLLNode* p; !isEmpty();){
         p = head->next;
         delete head;

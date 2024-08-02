@@ -1,5 +1,0 @@
-lsActivate vent: source venv/bin/activate
-
-brew install pycryptodome
-brew install gmp libmpc mpfr libffi
-brew install cmake

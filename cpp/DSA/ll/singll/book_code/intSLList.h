@@ -13,15 +13,15 @@ public:
     IntSLLNode* next;
 };
 
-class intSLList
+class IntSLList
 {
     private:
         IntSLLNode* head, *tail;
     public:
-        intSLList(){
+        IntSLList(){
             head = tail = 0;
         }
-        ~intSLList();
+        ~IntSLList();
 
         int isEmpty(){
             return head == 0;
