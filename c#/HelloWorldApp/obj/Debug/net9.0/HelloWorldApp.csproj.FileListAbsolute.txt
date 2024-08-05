@@ -1,0 +1,15 @@
+/Users/phamtunganh/Documents/code/c#/HelloWorldApp/bin/Debug/net9.0/HelloWorldApp
+/Users/phamtunganh/Documents/code/c#/HelloWorldApp/bin/Debug/net9.0/HelloWorldApp.deps.json
+/Users/phamtunganh/Documents/code/c#/HelloWorldApp/bin/Debug/net9.0/HelloWorldApp.runtimeconfig.json
+/Users/phamtunganh/Documents/code/c#/HelloWorldApp/bin/Debug/net9.0/HelloWorldApp.dll
+/Users/phamtunganh/Documents/code/c#/HelloWorldApp/bin/Debug/net9.0/HelloWorldApp.pdb
+/Users/phamtunganh/Documents/code/c#/HelloWorldApp/obj/Debug/net9.0/HelloWorldApp.GeneratedMSBuildEditorConfig.editorconfig
+/Users/phamtunganh/Documents/code/c#/HelloWorldApp/obj/Debug/net9.0/HelloWorldApp.AssemblyInfoInputs.cache
+/Users/phamtunganh/Documents/code/c#/HelloWorldApp/obj/Debug/net9.0/HelloWorldApp.AssemblyInfo.cs
+/Users/phamtunganh/Documents/code/c#/HelloWorldApp/obj/Debug/net9.0/HelloWorldApp.csproj.CoreCompileInputs.cache
+/Users/phamtunganh/Documents/code/c#/HelloWorldApp/obj/Debug/net9.0/HelloWorldApp.sourcelink.json
+/Users/phamtunganh/Documents/code/c#/HelloWorldApp/obj/Debug/net9.0/HelloWorldApp.dll
+/Users/phamtunganh/Documents/code/c#/HelloWorldApp/obj/Debug/net9.0/refint/HelloWorldApp.dll
+/Users/phamtunganh/Documents/code/c#/HelloWorldApp/obj/Debug/net9.0/HelloWorldApp.pdb
+/Users/phamtunganh/Documents/code/c#/HelloWorldApp/obj/Debug/net9.0/HelloWorldApp.genruntimeconfig.cache
+/Users/phamtunganh/Documents/code/c#/HelloWorldApp/obj/Debug/net9.0/ref/HelloWorldApp.dll
