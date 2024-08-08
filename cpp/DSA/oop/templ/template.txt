@@ -1,0 +1,2 @@
+template có thể thay thế các datatype
+template <typename T>

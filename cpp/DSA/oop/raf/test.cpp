@@ -16,11 +16,11 @@ void saveState(int state) {
 }
 
 int loadState() {
-    ifstream ip(filename);
+    ifstream file(filename);
     int state = 0;
-    if (ip.is_open()) {
-        ip >> state;
-        ip.close();
+    if (file.is_open()) {
+        file >> state;
+        file.close();
     } else {
         std::cerr << "Unable to open file for reading. Starting from state 0.\n";
     }
@@ -29,11 +29,13 @@ int loadState() {
 
 int main() {
     int state = loadState();
+    int n;
+    cin >> n;
 
     std::cout << "Current state: " << state << std::endl;
 
     // Perform some calculations
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < n; ++i) {
         state += 1;
         std::cout << "State: " << state << std::endl;
     }
