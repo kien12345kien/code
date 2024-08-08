@@ -1,2 +1,16 @@
 template có thể thay thế các datatype
+
+typename có thể được dùng bằng các class, int, double, float, ...
+
 template <typename T>
+T myMax(T x, T y){
+    return (x > y) ? x : y;
+}
+
+int main(){
+    cout << myMax<int> (3,7) << endl;
+    cout << myMax<double> (3.0,7.7) << endl;
+    cout << myMax<char> ('g','e') << endl;
+    
+    return 0;
+}
