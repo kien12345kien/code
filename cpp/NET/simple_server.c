@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "fatal.h"
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
@@ -9,7 +10,7 @@
 
 #define PORT 7890
 
-int main(){
+int main(void){
     int sockfd, new_sockfd;
     struct sockaddr_in host_addr, client_addr;
     socklen_t sin_size;
