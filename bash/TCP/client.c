@@ -4,55 +4,59 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 
-#define BROADCAST_PORT 8888
+#define SERVER_IP "127.0.0.1"
+#define SERVER_PORT 8080
 #define BUFFER_SIZE 1024
 
 int main() {
-    int sockfd;
-    struct sockaddr_in listen_addr;
+    int client_socket;
+    struct sockaddr_in server_addr;
     char buffer[BUFFER_SIZE];
-    ssize_t num_bytes_received;
-    socklen_t addr_len = sizeof(listen_addr);
+    ssize_t n;
 
-    // Create socket
-    if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
-        perror("Socket creation failed");
+    // Create a socket
+    client_socket = socket(AF_INET, SOCK_STREAM, 0);
+    if (client_socket == -1) {
+        perror("socket");
         exit(EXIT_FAILURE);
     }
 
-    // Set up the listen address struct
-    memset(&listen_addr, 0, sizeof(listen_addr));
-    listen_addr.sin_family = AF_INET;
-    listen_addr.sin_port = htons(BROADCAST_PORT);
-    listen_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    // Set up the server address structure
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(SERVER_PORT);
 
-    // Bind the socket to the port
-    if (bind(sockfd, (struct sockaddr*)&listen_addr, sizeof(listen_addr)) < 0) {
-        perror("Bind failed");
-        close(sockfd);
+    // Convert IPv4 and IPv6 addresses from text to binary form
+    if (inet_pton(AF_INET, SERVER_IP, &server_addr.sin_addr) <= 0) {
+        perror("inet_pton");
+        close(client_socket);
         exit(EXIT_FAILURE);
     }
 
-    printf("Listening for broadcast messages on port %d...\n", BROADCAST_PORT);
+    // Connect to the server
+    if (connect(client_socket, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1) {
+        perror("connect");
+        close(client_socket);
+        exit(EXIT_FAILURE);
+    }
 
-    while (1) {
-        // Receive broadcast message
-        num_bytes_received = recvfrom(sockfd, buffer, BUFFER_SIZE - 1, 0, (struct sockaddr*)&listen_addr, &addr_len);
-        if (num_bytes_received < 0) {
-            perror("Receive failed");
-            close(sockfd);
-            exit(EXIT_FAILURE);
-        }
+    printf("Connected to server %s:%d\n", SERVER_IP, SERVER_PORT);
 
-        // Null-terminate the received data
-        buffer[num_bytes_received] = '\0';
+    // Read input from the user and send it to the server
+    printf("Enter message: ");
+    fgets(buffer, BUFFER_SIZE, stdin);
+    write(client_socket, buffer, strlen(buffer));
 
-        // Print the received message
-        printf("Received broadcast message: %s\n", buffer);
+    // Receive the echoed message from the server
+    n = read(client_socket, buffer, BUFFER_SIZE - 1);
+    if (n > 0) {
+        buffer[n] = '\0';
+        printf("Echoed message: %s\n", buffer);
+    } else {
+        perror("read");
     }
 
     // Close the socket
-    close(sockfd);
+    close(client_socket);
 
     return 0;
 }

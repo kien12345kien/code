@@ -3,63 +3,112 @@
 #include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
-#include <time.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/wait.h>
 
-#define BROADCAST_IP "192.168.0.255"
-#define BROADCAST_PORT 8888
+#define PORT 8080
 #define BUFFER_SIZE 1024
-#define SLEEP_INTERVAL 10
+
+void handle_client(int client_socket) {
+    char buffer[BUFFER_SIZE];
+    ssize_t n;
+
+    while ((n = read(client_socket, buffer, BUFFER_SIZE - 1)) > 0) {
+        buffer[n] = '\0';  // Null-terminate the buffer
+        printf("Received: %s", buffer);
+        write(client_socket, buffer, n);  // Echo the message back to the client
+    }
+
+    close(client_socket);
+    exit(0);  // Terminate the child process
+}
+
+void sigchld_handler(int s) {
+    // Wait for all dead processes
+    // We use a loop to handle all children that have terminated
+    while(waitpid(-1, NULL, WNOHANG) > 0);
+}
 
 int main() {
-    int sockfd;
-    struct sockaddr_in broadcast_addr;
-    int broadcast_enable = 1;
-    char buffer[BUFFER_SIZE];
-    time_t rawtime;
-    struct tm * timeinfo;
+    int server_socket, client_socket;
+    struct sockaddr_in server_addr, client_addr;
+    socklen_t client_addr_len;
+    pid_t pid;
 
-    // Create socket
-    if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
-        perror("Socket creation failed");
+    // Create a socket
+    server_socket = socket(AF_INET, SOCK_STREAM, 0);
+    if (server_socket == -1) {
+        perror("socket");
         exit(EXIT_FAILURE);
     }
 
-    // Set socket options to enable broadcasting
-    if (setsockopt(sockfd, SOL_SOCKET, SO_BROADCAST, &broadcast_enable, sizeof(broadcast_enable)) < 0) {
-        perror("Error in setting broadcast option");
-        close(sockfd);
+    // Allow the server to reuse the address
+    int opt = 1;
+    if (setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1) {
+        perror("setsockopt");
+        close(server_socket);
         exit(EXIT_FAILURE);
     }
 
-    // Set up the broadcast address struct
-    memset(&broadcast_addr, 0, sizeof(broadcast_addr));
-    broadcast_addr.sin_family = AF_INET;
-    broadcast_addr.sin_port = htons(BROADCAST_PORT);
-    broadcast_addr.sin_addr.s_addr = inet_addr(BROADCAST_IP);
+    // Set up the server address structure
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_addr.s_addr = INADDR_ANY;
+    server_addr.sin_port = htons(PORT);
+
+    // Bind the socket to the address and port number
+    if (bind(server_socket, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1) {
+        perror("bind");
+        close(server_socket);
+        exit(EXIT_FAILURE);
+    }
+
+    // Listen for incoming connections
+    if (listen(server_socket, 10) == -1) {
+        perror("listen");
+        close(server_socket);
+        exit(EXIT_FAILURE);
+    }
+
+    // Handle SIGCHLD to prevent zombie processes
+    struct sigaction sa;
+    sa.sa_handler = sigchld_handler;  // Reap all dead processes
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = SA_RESTART;
+    if (sigaction(SIGCHLD, &sa, NULL) == -1) {
+        perror("sigaction");
+        close(server_socket);
+        exit(EXIT_FAILURE);
+    }
+
+    printf("Server listening on port %d\n", PORT);
 
     while (1) {
-        // Get current time
-        time(&rawtime);
-        timeinfo = localtime(&rawtime);
-
-        // Format the time into the buffer
-        strftime(buffer, BUFFER_SIZE, "Current time: %Y-%m-%d %H:%M:%S", timeinfo);
-
-        // Send broadcast message
-        if (sendto(sockfd, buffer, strlen(buffer), 0, (struct sockaddr*)&broadcast_addr, sizeof(broadcast_addr)) < 0) {
-            perror("Broadcast message send failed");
-            close(sockfd);
-            exit(EXIT_FAILURE);
+        client_addr_len = sizeof(client_addr);
+        client_socket = accept(server_socket, (struct sockaddr *)&client_addr, &client_addr_len);
+        if (client_socket == -1) {
+            perror("accept");
+            continue;
         }
 
-        printf("Broadcast message sent: %s\n", buffer);
+        // Fork a new process to handle the client
+        pid = fork();
+        if (pid == -1) {
+            perror("fork");
+            close(client_socket);
+            continue;
+        }
 
-        // Sleep for the defined interval
-        sleep(SLEEP_INTERVAL);
+        if (pid == 0) {  // Child process
+            close(server_socket);  // Close the listening socket in the child process
+            handle_client(client_socket);
+        } else {  // Parent process
+            close(client_socket);  // Close the client socket in the parent process
+        }
     }
 
-    // Close the socket
-    close(sockfd);
+    // Close the server socket
+    close(server_socket);
 
     return 0;
 }
