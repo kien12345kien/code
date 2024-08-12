@@ -3,6 +3,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <fcntl.h>
+#include <sys/select.h>
 
 #define SERVER_IP "192.168.1.73"
 #define SERVER_PORT 8080
@@ -12,7 +14,8 @@ int main() {
     int client_socket;
     struct sockaddr_in server_addr;
     char buffer[BUFFER_SIZE];
-    ssize_t n;
+    fd_set read_fds;
+    int max_fd;
 
     // Create a socket
     client_socket = socket(AF_INET, SOCK_STREAM, 0);
@@ -41,18 +44,37 @@ int main() {
 
     printf("Connected to server %s:%d\n", SERVER_IP, SERVER_PORT);
 
-    // Read input from the user and send it to the server
-    printf("Enter message: ");
-    fgets(buffer, BUFFER_SIZE, stdin);
-    write(client_socket, buffer, strlen(buffer));
+    while (1) {
+        FD_ZERO(&read_fds);
+        FD_SET(STDIN_FILENO, &read_fds);
+        FD_SET(client_socket, &read_fds);
+        max_fd = client_socket > STDIN_FILENO ? client_socket : STDIN_FILENO;
 
-    // Receive the echoed message from the server
-    n = read(client_socket, buffer, BUFFER_SIZE - 1);
-    if (n > 0) {
-        buffer[n] = '\0';
-        printf("Echoed message: %s\n", buffer);
-    } else {
-        perror("read");
+        // Use select to wait for activity on sockets
+        if (select(max_fd + 1, &read_fds, NULL, NULL, NULL) == -1) {
+            perror("select");
+            exit(EXIT_FAILURE);
+        }
+
+        // Check if there's input from the server
+        if (FD_ISSET(client_socket, &read_fds)) {
+            ssize_t n = read(client_socket, buffer, BUFFER_SIZE - 1);
+            if (n > 0) {
+                buffer[n] = '\0';
+                printf("Server: %s", buffer);
+            } else {
+                perror("read");
+                close(client_socket);
+                exit(EXIT_FAILURE);
+            }
+        }
+
+        // Check if there's input from the user
+        if (FD_ISSET(STDIN_FILENO, &read_fds)) {
+            if (fgets(buffer, BUFFER_SIZE, stdin) != NULL) {
+                write(client_socket, buffer, strlen(buffer));
+            }
+        }
     }
 
     // Close the socket
