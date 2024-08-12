@@ -1,65 +1,65 @@
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <strings.h>
-#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <time.h>
 
-#define SERV_PORT 9877
-#define LISTENQ 1024
-#define SA struct sockaddr
+#define BROADCAST_IP "192.168.0.255"
+#define BROADCAST_PORT 8888
+#define BUFFER_SIZE 1024
+#define SLEEP_INTERVAL 10
 
-void str_echo(int sockfd) {
-    ssize_t n;
-    char buf[1024];
-again:
-    while ((n = read(sockfd, buf, 1024)) > 0)
-        write(sockfd, buf, n);
-    if (n < 0)
-        goto again;
-}
+int main() {
+    int sockfd;
+    struct sockaddr_in broadcast_addr;
+    int broadcast_enable = 1;
+    char buffer[BUFFER_SIZE];
+    time_t rawtime;
+    struct tm * timeinfo;
 
-int main(int argc, char **argv) {
-    int listenfd, connfd;
-    pid_t childpid;
-    socklen_t clilen;
-    struct sockaddr_in cliaddr, servaddr;
-
-    if ((listenfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        perror("socket error");
-        exit(1);
+    // Create socket
+    if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+        perror("Socket creation failed");
+        exit(EXIT_FAILURE);
     }
 
-    bzero(&servaddr, sizeof(servaddr));
-    servaddr.sin_family = AF_INET;
-    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-    servaddr.sin_port = htons(SERV_PORT);
-
-    if (bind(listenfd, (SA *) &servaddr, sizeof(servaddr)) < 0) {
-        perror("bind error");
-        exit(1);
+    // Set socket options to enable broadcasting
+    if (setsockopt(sockfd, SOL_SOCKET, SO_BROADCAST, &broadcast_enable, sizeof(broadcast_enable)) < 0) {
+        perror("Error in setting broadcast option");
+        close(sockfd);
+        exit(EXIT_FAILURE);
     }
 
-    if (listen(listenfd, LISTENQ) < 0) {
-        perror("listen error");
-        exit(1);
-    }
+    // Set up the broadcast address struct
+    memset(&broadcast_addr, 0, sizeof(broadcast_addr));
+    broadcast_addr.sin_family = AF_INET;
+    broadcast_addr.sin_port = htons(BROADCAST_PORT);
+    broadcast_addr.sin_addr.s_addr = inet_addr(BROADCAST_IP);
 
-    for (;;) {
-        clilen = sizeof(cliaddr);
-        if ((connfd = accept(listenfd, (SA *) &cliaddr, &clilen)) < 0) {
-            perror("accept error");
-            continue;
+    while (1) {
+        // Get current time
+        time(&rawtime);
+        timeinfo = localtime(&rawtime);
+
+        // Format the time into the buffer
+        strftime(buffer, BUFFER_SIZE, "Current time: %Y-%m-%d %H:%M:%S", timeinfo);
+
+        // Send broadcast message
+        if (sendto(sockfd, buffer, strlen(buffer), 0, (struct sockaddr*)&broadcast_addr, sizeof(broadcast_addr)) < 0) {
+            perror("Broadcast message send failed");
+            close(sockfd);
+            exit(EXIT_FAILURE);
         }
 
-        if ((childpid = fork()) == 0) { /* child process */
-            close(listenfd);  /* close listening socket */
-            str_echo(connfd); /* process the request */
-            exit(0);
-        }
-        close(connfd); /* parent closes connected socket */
-    }
-}
+        printf("Broadcast message sent: %s\n", buffer);
 
+        // Sleep for the defined interval
+        sleep(SLEEP_INTERVAL);
+    }
+
+    // Close the socket
+    close(sockfd);
+
+    return 0;
+}
