@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stack>
 // FIFO
+// Create Node
 typedef struct Node
 {
     int data;
@@ -8,6 +9,7 @@ typedef struct Node
 }
 Node;
 
+//Create Stack to calculate size of stack
 typedef struct Stack
 {
     int size;
@@ -15,27 +17,30 @@ typedef struct Stack
 }
 Stack;
 
+//  set default value for size and node top of stack
 void init(Stack *s)
 {
     s->size = 0;
     s->top = nullptr;
 }
 
+//  Check stack is empty
 int isEmpty(Stack *s)
 {
     return (s->size == 0);
 }
 
+//  push node in stack
 int push(int newData, Stack* s)
 {
-    Node *p = new Node;
+    Node *p = new Node;     // Create each node for each newData
     if (p == nullptr)
     {
         return 0;
     }
 
     p->data = newData;
-    p->next = s->top;
+    p->next = s->top;       
     s->top = p;
     s->size++;
     return 1;
@@ -44,10 +49,10 @@ int push(int newData, Stack* s)
 int pop(Stack *s)
 {
     Node *p;
-    if (isEmpty(s))
+    if (isEmpty(s))             //Check stack empty
         return 0;
 
-    p = s->top;
+    p = s->top;                 
     s->top = s->top->next;
     s->size--;
     delete p;
@@ -57,10 +62,10 @@ int pop(Stack *s)
 int main()
 {
     // Example usage
-    Stack myStack;
-    init(&myStack);
+    Stack myStack;                  //  Create a stack
+    init(&myStack);                 //  Set value for stakc
 
-    push(10, &myStack);
+    push(10, &myStack);             
     push(20, &myStack);
     push(30, &myStack);
 

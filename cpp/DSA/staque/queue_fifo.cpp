@@ -1,6 +1,5 @@
 #include <iostream>
-#include <string>
-#include <cstdlib>
+
 // FILO
 typedef struct Node
 {
@@ -28,48 +27,35 @@ int isEmpty(Queue* q)
     return (q->front == nullptr);
 }
 
-void enqueue(Queue *q, int val)
-{
+void enqueue(Queue *q, int val) {
     Node *p = new Node;
     p->data = val;
-    p->next = nullptr;
-    if(q->front == nullptr)
-    {
-        q->front = q->back = p;
-    }
-    else
-    {
-        p->next = q->back;
-        q->back = p;
-    }
+    p->next = nullptr;  // New node will be the new back of the queue
+    
+    (q->front ==  nullptr) ?    (q->front = q->back = p) :  // Queue is empty
+                                (q->back->next = p,         // Link current back node to new node
+                                 q->back = p);               // Update back to new node
     q->size++;
 }
 
 
 void dequeue(Queue *q)
 {
-    if(isEmpty(q))  
+    if (isEmpty(q))
         return;
-    else
-    {
-        if(q->size == 1)
-        {
-            q->front = q->back = nullptr;
-            q->size --;
-        }
-        else
-        {
-            Node *p = q->back;
-            while (p->next != q->front)
-            {
-                p = p->next;
-            }
-            q->front = p;
-            q->front->next = nullptr;
-            q->size--;
-        }
+    
+    Node *temp = q->front;  // Node to be removed
+    q->front = q->front->next;  // Update front to the next node
+
+    // If the queue becomes empty after dequeue, update the back pointer
+    if (q->front == nullptr) {
+        q->back = nullptr;
     }
+
+    delete temp;  // Free the memory of the removed node
+    q->size--;
 }
+
 
 int main()
 {
