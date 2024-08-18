@@ -1,0 +1,43 @@
+id: display user identity
+
+chmod: change file's mode
+
+umask: set the default file permission
+
+su: run a shell as another user
+
+sudo: execute a command as another user
+
+chown: change file owner
+
+chgrp: change file group ownership
+
+passwd: change user password
+
+--------------------------------------------------------------------------
+ps: report a snapshot of current processes
+
+top: display task
+
+jobs: list active jobs
+
+bg: place a job in the background
+
+fg: place a job in the foreground
+
+kill: send a signal to a process
+
+killall: kill processes by name
+
+shutdown: shutdown or reboot system
+
+-------------------------THE ENVIRONMENT------------------------------------------------
+printenv: print part or all of the env
+
+set: set shell options
+
+export: export env to subsequently executed programs
+
+alias: create an alias for command
+
+---------------------------------------------
