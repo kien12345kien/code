@@ -53,7 +53,7 @@ Node;
 
 typedef struct Queue
 {
-    Node *front, *back;
+    Node *top, *back;
     int size;
 }
 Queue;
@@ -62,12 +62,12 @@ void init(Queue *q)
 {
     q->size = 0;
     q->back = nullptr;
-    q->front = nullptr;
+    q->top = nullptr;
 }
 
 int isEmpty(Queue* q)
 {
-    return (q->front == nullptr);
+    return (q->top == nullptr);
 }
 
 void enqueue(Queue* q, const Product& product) {    //const Product& product
@@ -75,7 +75,7 @@ void enqueue(Queue* q, const Product& product) {    //const Product& product
     p->data = product;
     p->next = nullptr;
     if (isEmpty(q)) {
-        q->front = q->back = p;
+        q->top = q->back = p;
     } else {
         q->back->next = p;
         q->back = p;
@@ -88,11 +88,11 @@ void dequeue(Queue* q) {
     if (isEmpty(q)) {
         return;
     } else {
-        Node* temp = q->front;
-        q->front = q->front->next;
+        Node* temp = q->top;
+        q->top = q->top->next;
         delete temp;
         q->size--;
-        if (q->front == nullptr) {
+        if (q->top == nullptr) {
             q->back = nullptr;
         }
     }
@@ -100,7 +100,7 @@ void dequeue(Queue* q) {
 
 Product front(Queue* q) {
     if (!isEmpty(q)) {
-        return q->front->data;
+        return q->top->data;
     }
     return Product(); // Return a default product if queue is empty
 }

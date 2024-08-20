@@ -63,7 +63,7 @@ typedef struct Node{
 };
 
 typedef struct Queue{
-    Node* front,* back;
+    Node* top,* back;
     int size;
 };
 
@@ -71,12 +71,12 @@ void init(Queue *q)
 {
     q->size = 0;
     q->back = nullptr;
-    q->front = nullptr;
+    q->top = nullptr;
 }
 
 int isEmpty(Queue* q)
 {
-    return (q->front == nullptr);
+    return (q->top == nullptr);
 }
 
 void enqueue(Queue *q, const Customer& customer){
@@ -84,7 +84,7 @@ void enqueue(Queue *q, const Customer& customer){
     newNode->data = customer;
     newNode->next = nullptr;
     if(isEmpty(q)){
-        q->back = q->front = newNode;
+        q->back = q->top = newNode;
     }
     else{
         newNode->next = q->back;
@@ -95,9 +95,9 @@ void enqueue(Queue *q, const Customer& customer){
 
 void dequeue(Queue* q) {
     if (isEmpty(q)) return;
-    Node* temp = q->front;
-    q->front = q->front->next;
-    if (q->front == nullptr) {
+    Node* temp = q->top;
+    q->top = q->top->next;
+    if (q->top == nullptr) {
         q->back = nullptr;
     }
     delete temp;
@@ -106,7 +106,7 @@ void dequeue(Queue* q) {
 
 Customer frontCustomer(Queue* q) {
         if (!isEmpty(q)) {
-            return q->front->data;
+            return q->top->data;
         }
         return Customer(); // Return a default customer if queue is empty
 };

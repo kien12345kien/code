@@ -10,7 +10,7 @@ Node;
 
 typedef struct Queue
 {
-    Node *front, *back;
+    Node *top, *back;
     int size;
 }
 Queue;
@@ -19,12 +19,12 @@ void init(Queue *q)
 {
     q->size = 0;
     q->back = nullptr;
-    q->front = nullptr;
+    q->top = nullptr;
 }
 
 int isEmpty(Queue* q)
 {
-    return (q->front == nullptr);
+    return (q->top == nullptr);
 }
 
 void enqueue(Queue *q, int val) {
@@ -32,7 +32,7 @@ void enqueue(Queue *q, int val) {
     p->data = val;
     p->next = nullptr;  // New node will be the new back of the queue
     
-    (q->front ==  nullptr) ?    (q->front = q->back = p) :  // Queue is empty
+    (q->top ==  nullptr) ?    (q->top = q->back = p) :  // Queue is empty
                                 (q->back->next = p,         // Link current back node to new node
                                  q->back = p);               // Update back to new node
     q->size++;
@@ -44,11 +44,11 @@ void dequeue(Queue *q)
     if (isEmpty(q))
         return;
     
-    Node *temp = q->front;  // Node to be removed
-    q->front = q->front->next;  // Update front to the next node
+    Node *temp = q->top;  // Node to be removed
+    q->top = q->top->next;  // Update front to the next node
 
     // If the queue becomes empty after dequeue, update the back pointer
-    if (q->front == nullptr) {
+    if (q->top == nullptr) {
         q->back = nullptr;
     }
 
@@ -69,7 +69,7 @@ int main()
 
     while (!isEmpty(&myQueue))
     {
-        std::cout << "Dequeued: " << myQueue.front->data << std::endl;
+        std::cout << "Dequeued: " << myQueue.top->data << std::endl;
         dequeue(&myQueue);
     }
 
