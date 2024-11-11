@@ -14,7 +14,7 @@ class Vector{
         }
         // Vector(int x, int y) : x(x), y(y) { }
 
-        Vector add( Vector v) {
+        Vector add(Vector v) {
             int new_x = this->x + v.x;
             int new_y = this->y + v.y;
             return Vector(new_x, new_y);

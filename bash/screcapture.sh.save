@@ -1,0 +1,19 @@
+#!/bin/bash
+
+capture = "$(which screencature) -x -m -C"
+freq=60
+maxshoots=30
+animate=0
+
+while getopts"af:m" opt; do
+	case $opt in
+	a ) anumate=1;			;;
+	f ) freq=$OPTARG;		;;
+	m ) maxshots=$OPTARG;		;;
+	? ) echo "Usage: $0 [-a] [-f frequency] [-m maxcaps]" >&2
+		exit 1
+	esac
+done
+
+couter=0
+

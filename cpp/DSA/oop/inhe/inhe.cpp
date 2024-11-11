@@ -36,11 +36,11 @@ class Derived1Level1 : public virtual BaseClass{
 
 class Derived2Level1 : public virtual BaseClass {
     public:
-//
+
         void f(string s = "unknown") {
             cout << "Function f() in Derived2Level1 called from " << s << endl;
             g("Derived2Level1");
-//            h();  // error: BaseClass::h() is not accessible
+            // h();  // error: BaseClass::h() is not accessible
 } };
 
 class DerivedLevel2 : public Derived1Level1, public Derived2Level1 {

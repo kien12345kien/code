@@ -70,7 +70,7 @@ void remove(List* l, int val)   // Remove an item from a list
 
     Node *q = p->next;
     int cnt = 1;
-    while ((p->data!= val) && (cnt < l->size))
+    while ((p->data!= val) && (l->size > cnt))
     {
         /* code */
         q = p;
