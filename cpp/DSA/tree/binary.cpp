@@ -3,7 +3,7 @@
 using namespace std;
 
 typedef struct TreeNode{
-    int val;
+    int data;
     struct TreeNode* parent;
     struct TreeNode* tLeft;
     struct TreeNode* tRight;
@@ -12,7 +12,7 @@ TreeNode;
 
 TreeNode* init(TreeNode* tree, int val){
     tree = new TreeNode;
-    tree->val = val;
+    tree->data = val;
     tree->tLeft = nullptr;
     tree->tRight = nullptr;
     return tree;    
@@ -21,7 +21,7 @@ TreeNode* init(TreeNode* tree, int val){
 void NLR(TreeNode* tree){
     if(tree == nullptr) return;
 
-    cout << tree->val << endl;
+    cout << tree->data << endl;
 
     NLR(tree->tLeft);
     NLR(tree->tRight);
@@ -43,7 +43,7 @@ TreeNode* insert(TreeNode* tree, int x){
         // (x < tree->val) ? 
         // tree->tLeft = insert(tree->tLeft, x) : tree->tRight = insert(tree->tRight, x);
 
-        if(x < tree->val){
+        if(x < tree->data){
             tree->tLeft = insert(tree->tLeft, x);
         }
         else    
@@ -56,10 +56,10 @@ TreeNode* insert(TreeNode* tree, int x){
 TreeNode* deleteNode(TreeNode* root, int key){
     if(root == nullptr) return root;
 
-    if (key < root->val){
+    if (key < root->data){
         root->tLeft = deleteNode(root->tLeft, key);
     }
-    else if (key > root->val){
+    else if (key > root->data){
         root->tRight = deleteNode(root->tRight, key);
     }
     else{
@@ -78,10 +78,10 @@ TreeNode* deleteNode(TreeNode* root, int key){
         TreeNode* temp = findmin(root->tRight);
 
         // Copy the inorder successor's content to this node
-        root->val = temp->val;
+        root->data = temp->data;
 
         // Delete the inorder successor
-        root->tRight = deleteNode(root->tRight, temp->val);
+        root->tRight = deleteNode(root->tRight, temp->data);
     }
     return root;
 }

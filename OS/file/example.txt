@@ -1,0 +1,7 @@
+helloThis is a sample text written to a file using C++.helloThis is a sample text written to a file using C++.helloThis is a sample text written to a file using C++.helloThis is a sample text written to a file using C++.
+helloThis is a sample text written to a file using C++.
+This is a sample text written to a file using C++.
+This is a sample text written to a file using modern C++.
+This is a sample text written to a file using modern C++.
+This is a sample text written to a file using modern C++.
+This is a sample text written to a file using modern C++.
